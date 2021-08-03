@@ -37,7 +37,6 @@ const UserComponent = () => {
                 .post('/api/members', { name })
                 .then(() => mutate())
         }, [membersData]
-
     )
 
 

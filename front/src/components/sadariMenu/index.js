@@ -76,7 +76,9 @@ const onLogout = useCallback(() => {
     })
     .then(() => {
       mutate('/api/auth')
-      setExit(true)
+      setTimeout(() => {
+        setExit(true)
+      }, 500)
     });
 }, []);
 

@@ -32,12 +32,12 @@ faker.locale = "ko"
 const Home = () => {
 
     const { data: userData } = useSWR('/api/auth', fetcher)
-    const { data: usersData } = useSWR('/api/users', fetcher)
+    const { data: usersData, mutate } = useSWR('/api/users', fetcher)
 
     const [detail, setDetail] = useState(true)
     const [open, setOpen] = useState(false)
 
-    const [name, onChangeName] = useInput(faker.name.firstName() + '의 사다리')
+    const [name, onChangeName] = useInput('')
     const [password, onChangePassword] = useInput('')
 
     const [signUpError, setSignUpError] = useState(false)
@@ -57,6 +57,7 @@ const Home = () => {
                 .post('/api/auth/join', { name, password })
                 .then(() => {
                     setSignUpSuccess(true)
+                    mutate()
                 })
                 .catch((err) => {
                     setSignUpError(true)
@@ -65,7 +66,11 @@ const Home = () => {
         }, [name, password]
     )
 
-    // if (userData) {
+    if (userData) {
+        return <Redirect to="/sadari" />
+    }
+
+    // if (setSignUpSuccess) {
     //     return <Redirect to="/sadari" />
     // }
 
@@ -246,7 +251,6 @@ const Home = () => {
                             icon='lock'
                             iconPosition='left'
                             placeholder='입장코드를 입력해 주세요'
-                            type='password'
                             value={password}
                             onChange={onChangePassword}
                             style={{ marginBottom: '1em' }}
@@ -266,7 +270,7 @@ const Home = () => {
                                 <Button type="submit" color='green' inverted>
                                     <Icon name='checkmark' /> 생성
         </Button>
-        <Button basic color='red' inverted onClick={() => setOpen(false)}>
+        <Button color='red' inverted onClick={() => setOpen(false)}>
                                     <Icon name='remove' /> 취소
         </Button>
 
@@ -292,7 +296,7 @@ const Home = () => {
                                 사다리 생성 성공!!
             </Message.Header>
                             <p>
-                                <a href={"/sadari?name=" + name}>여기</a>를 눌러 사다리로 이동합니다.
+                                <mark><a href={"/sadari?name=" + name}>여기</a></mark>를 눌러 사다리로 이동합니다.
             </p>
                         </Message>
                     }

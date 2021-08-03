@@ -32,8 +32,13 @@ import EditableInput from './EditableText'
 import fetcher from '../../utils/fetcher'
 import useSWR from 'swr'
 
+import faker from 'faker'
+import axios from 'axios'
+
+
+faker.locale = "ko"
+
 const SADARILENGTH = 40
-const players = ['철수', '영희', '민수', '슬기', '수지', '지수', '영애', '민기']
 
 const MainSadari = (props) => {
 
@@ -42,12 +47,15 @@ const MainSadari = (props) => {
   const members = membersData?.filter((member) => member.status === 1)
   const verticalCount = SADARILENGTH
   const horizontalCount = members?.length
-  const connCount = horizontalCount * 3
+  const connCount = horizontalCount * 5
   const timeouts = []
 
   const [lState, setLState] = useState([])
   const [rState, setRState] = useState([])
+  const [cover, setCover] = useState(false)
+
   const [isPlaying, setIsPlaying] = useState(false)
+  const [isOne, setIsOne] = useState(false)
 
   const resetHandler = useCallback(async (e) => {
     const arr = []
@@ -63,38 +71,36 @@ const MainSadari = (props) => {
       arr.push(verticalArr)
     }
 
-    setLState(arr)
-    setRState(new Array(horizontalCount).fill(null))
-
-  })
-
-  
-  const replaceHandler = useCallback(async (e) => {
     for (let i = 0; i < connCount; i++) {
-      const newLState = lState.slice()
-
       const [vIndex, hIndex] = [getRandomInt(1, verticalCount - 1), getRandomInt(0, horizontalCount - 1)]
 
-      if (newLState[vIndex - 1][hIndex].h || newLState[vIndex + 1][hIndex].h) {
+      if (arr[vIndex - 1][hIndex]?.h || arr[vIndex + 1][hIndex]?.h) {
         continue
       }
 
       if (hIndex > 0) {
-        if (newLState[vIndex][hIndex - 1].h) {
+        if (arr[vIndex][hIndex - 1]?.h) {
           continue
         }
       }
 
       if (hIndex < horizontalCount - 1) {
-        if (newLState[vIndex][hIndex + 1].h) {
+        if (arr[vIndex][hIndex + 1]?.h) {
           continue
         }
       }
 
-      newLState[vIndex][hIndex].h = ColorTableRaw[1]
-      setLState(newLState)
+      arr[vIndex][hIndex].h = ColorTableRaw[1]
+
     }
+
+
+    setLState(arr)
+    setRState(new Array(horizontalCount).fill(null))
+
+
   })
+
 
   useEffect(() => {
     resetHandler()
@@ -104,12 +110,15 @@ const MainSadari = (props) => {
   //   setRState(lState[verticalCount - 1]?.map((node) => node.v - 2))
   // }, [lState])
 
-
-
-
-
   const runHandler = useCallback(async (order) => {
-    
+
+    if(members.length < 2) {
+      setIsOne(true)
+      return
+    }
+
+    setIsOne(false)
+
     setIsPlaying(true)
 
     const startId = order || 0
@@ -139,7 +148,7 @@ const MainSadari = (props) => {
 
         current.v = current.v + 1
         setLState(newLState)
-        timeouts.push(await timeout(10)) 
+        timeouts.push(await timeout(30))
 
       }
       newRState[current.h] = members[i]
@@ -150,16 +159,31 @@ const MainSadari = (props) => {
   })
 
   const stopHandler = useCallback(async () => {
-    for (let i = 0; i < timeouts.length; i++){
+    for (let i = 0; i < timeouts.length; i++) {
       clearTimeout(timeouts[i])
     }
   })
 
+  const onCreate = useCallback(
+    (name) => {
+        axios
+            .post('/api/members', { name })
+            .then(() => mutate())
+    }, [membersData]
+)
+
+const onDelete = useCallback(
+  (id) => {
+      axios
+          .delete('/api/members/' + id)
+          .then(() => mutate())
+  }, [membersData]
+)
 
 
   return (
     <>
-      
+
 
       <Segment>
         <table style={{ width: '100%', borderWidth: '0px', borderColor: 'gray', textAlignLast: 'center', borderSpacing: '0px', padding: '0px', tableLayout: 'fixed' }}>
@@ -170,7 +194,7 @@ const MainSadari = (props) => {
                 members.map((member, index) => (
 
                   <th key={index}>
-                    <Label as='a' color={getColorById(member.id)} image onClick={() => runHandler(index)}>
+                    <Label as='a' color={getColorById(member.id)} image>
                       <img src={'https://avatars.dicebear.com/api/avataaars/' + member.name + '.svg'} />
                       {member.name}
                     </Label>
@@ -178,11 +202,35 @@ const MainSadari = (props) => {
                 ))
               }
             </tr>
+            <tr>
+              {
+                members &&
+                members.map((member, index) => (
+
+                  <th key={index}>
+                    <Button.Group basic size="mini">
+                      <Button icon onClick={() => runHandler(index)}>
+                        <Icon name='play' />
+                      </Button>
+                      <Button icon onClick={() => onDelete(member.id)}>
+                        <Icon name='delete' />
+                      </Button>
+                    </Button.Group>
+                  </th>
+                ))
+              }
+            </tr>
           </thead>
-          <tbody>
+          <tbody style={{position:'relative'}}>
+          {
+            cover &&
+            <Image style={{position:'absolute', zIndex:4, width:'100%', height: '60%', top:'20%'}} centered src="cover.png" />
+
+          }
+
             {
               lState.map((horizontal, vIndex) => (
-                <tr key={vIndex}>
+                <tr key={vIndex} style={{position:'relative'}}>
                   {horizontal.map((node, hIndex) => (
                     <SadariTD
                       vColor={node.v}
@@ -209,18 +257,18 @@ const MainSadari = (props) => {
           </thead>
           <thead>
             <tr>
-                {
-                  rState?.map((member, index) => (
-                    <th key={index}>
-                      { member &&
-                        <Label color={getColorById(member.id)} image>
-                          <img src={'https://avatars.dicebear.com/api/avataaars/' + member.name + '.svg'} />
-                          {member.name}
-                        </Label>
-                      }
-                    </th>
-                  ))
-                }
+              {
+                rState?.map((member, index) => (
+                  <th key={index}>
+                    {member &&
+                      <Label color={getColorById(member.id)} image>
+                        <img src={'https://avatars.dicebear.com/api/avataaars/' + member.name + '.svg'} />
+                        {member.name}
+                      </Label>
+                    }
+                  </th>
+                ))
+              }
             </tr>
           </thead>
 
@@ -230,21 +278,34 @@ const MainSadari = (props) => {
       {
         !isPlaying && <Button positive onClick={() => runHandler()}>시작</Button>
       }
-            {
+      {
         isPlaying && <Button disabled negative onClick={() => stopHandler()}>사다리가 진행 중 입니다</Button>
       }
       {
-        !isPlaying && <Button primary onClick={() => replaceHandler()}>선 추가하기</Button>
+        !isPlaying && <Button negative onClick={() => resetHandler()}>리셋</Button>
       }
+
+<Button floated='right' secondary onClick={() => setCover(!cover)}>가림막 설정</Button>
+
       {
-        !isPlaying && <Button secondary onClick={() => resetHandler()}>리셋</Button>
+        !isPlaying && <Button floated='right' primary onClick={() => onCreate(faker.name.firstName())}>참가자 추가</Button>
       }
-      
-      
+
+
+
+      {
+        isOne &&
+        <Message warning>
+        <Message.Header>참가자 숫자 오류</Message.Header>
+        <p>참가자 숫자가 부족합니다.</p>
+      </Message>
+
+      }
+
 
       <Message info>
-        <Message.Header>아무 참가자도 보이지 않나요?</Message.Header>
-        <p><a href='/member'>참가자 관리</a>에서 참가자를 추가해 보세요!!</p>
+        <Message.Header>참가자 이름을 변경 하거나 상태를 변경하려면?</Message.Header>
+        <p><mark><a href='/member'>참가자 관리</a></mark>에서 해 보세요!!</p>
       </Message>
       <Message info>
         <Message.Header>사다리 타기를 시작하려면</Message.Header>
