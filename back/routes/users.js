@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const { User } = require('../models/')
+const { User, Member } = require('../models/')
 const { isLoggedIn, isAdminLoggedIn, isNotLoggedIn } = require('./middlewares')
 
 /* GET users listing. */
@@ -17,6 +17,7 @@ router.get('/', async (req, res, next) => {
     next(err)
   }
 });
+
 
 // router.patch('/:id', isAdminLoggedIn ,async (req, res, next) => {
 

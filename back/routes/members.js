@@ -11,7 +11,7 @@ router.get('/', isLoggedIn ,async (req, res, next) => {
       where: {
         userId:req.user.id
       },
-      attributes: ['id', 'name', 'status'],
+      attributes: ['id', 'name', 'status', 'once'],
     })
     res.json(members)
   } catch (err) {

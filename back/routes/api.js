@@ -9,6 +9,6 @@ router.get('/', function(req, res, next) {
 router.use('/users', require('./users'))
 router.use('/auth', require('./auth'))
 router.use('/members', require('./members'))
-
+router.use('/once', require('./once'))
 
 module.exports = router;
