@@ -21,6 +21,7 @@ import {
   Modal,
   Form,
   Message,
+  Transition,
 } from 'semantic-ui-react'
 
 import { Link, Redirect } from 'react-router-dom'
@@ -36,13 +37,16 @@ import MemberListButton from './MemberListButton'
 
 const SadariMenu = (props) => {
   const [visible, setVisible] = useState(false)
+  const [pcVisible, setPcVisible] = useState(false)
   const toggleVisible = () => setVisible(!visible)
   const handlePusher = () => {
-    if (visible)
-      setVisible(false)
+    if (visible) {
+            setVisible(false)
+    }
   }
 
-  const { data: userData } = useSWR('/api/auth', fetcher)
+
+  // const { data: userData } = useSWR('/api/auth', fetcher)
 
   const [name, onChangeName] = useInput(useQuery().get("name") || '')
   const [password, onChangePassword] = useInput('')
@@ -84,6 +88,13 @@ const onLogout = useCallback(() => {
     });
 }, []);
 
+
+useEffect(() => {
+  const timer = setTimeout(() => setPcVisible(true), 2000)
+
+  return () => clearTimeout(timer)
+}, [])
+
 // const history = useHistory()
 
 // const goBack = () => {
@@ -106,6 +117,7 @@ const onLogout = useCallback(() => {
           inverted
           vertical
           visible={visible}
+          // onHide={() => setVisible(false)}
           size="massive"
           borderless
           // compact
@@ -115,6 +127,7 @@ const onLogout = useCallback(() => {
 <Menu.Item
             as={Link}
             to='/sadari'
+            onClick={toggleVisible}
           >
             <Icon name='road' size="large" />
             사다리 타기
@@ -123,6 +136,7 @@ const onLogout = useCallback(() => {
           <Menu.Item
             as={Link}
             to='/order'
+            onClick={toggleVisible}
           >
             <Icon name='ordered list' size="large" />
             순서 뽑기
@@ -131,6 +145,7 @@ const onLogout = useCallback(() => {
           <Menu.Item
             as={Link}
             to='/once'
+            onClick={toggleVisible}
           >
             <Icon name='clipboard check' size="large" />
             랜덤 뽑기
@@ -139,6 +154,7 @@ const onLogout = useCallback(() => {
           <Menu.Item
             as={Link}
             to='/team'
+            onClick={toggleVisible}
           >
             <Icon name='object group' size="large" />
             팀 나누기
@@ -147,6 +163,7 @@ const onLogout = useCallback(() => {
           <Menu.Item
             as={Link}
             to='/seat'
+            onClick={toggleVisible}
           >
             <Icon name='street view' size="large" />
             자리 배치
@@ -155,6 +172,7 @@ const onLogout = useCallback(() => {
           <Menu.Item
             as={Link}
             to='/info'
+            onClick={toggleVisible}
           >
             <Icon name='info circle' size="large" />
             이건 뭔가요?
@@ -250,6 +268,25 @@ const onLogout = useCallback(() => {
             <MemberListButton />
             
           </Segment> */}
+
+          <Transition
+            animation='bounce'
+            duration={1000}
+            visible={pcVisible}
+            >
+
+                    <Message 
+                    info 
+                    style={{margin:'10px'}} 
+                    // onDismiss={() => {setPcVisible(false)
+                    //    console.log('hh')}}
+                    header='PC에서 조금 더 잘보입니다'
+                    content='인터넷 창을 켜고 sadari.app을 쳐보세요'
+                    />
+                    </Transition>
+
+
+
 
 
 

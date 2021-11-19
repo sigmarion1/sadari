@@ -42,7 +42,7 @@ const SadariMenu = (props) => {
       setVisible(false)
   }
 
-  const { data: userData } = useSWR('/api/auth', fetcher)
+  // const { data: userData } = useSWR('/api/auth', fetcher)
 
   const [name, onChangeName] = useInput(useQuery().get("name") || '')
   const [password, onChangePassword] = useInput('')
