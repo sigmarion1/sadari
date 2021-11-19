@@ -267,11 +267,12 @@ const Home = () => {
                         <Grid textAlign="right" >
                             <Grid.Column>
 
-                                <Button type="submit" color='green' inverted>
-                                    <Icon name='checkmark' /> 생성
-        </Button>
+
         <Button color='red' inverted onClick={() => setOpen(false)}>
                                     <Icon name='remove' /> 취소
+        </Button>
+        <Button type="submit" color='green' inverted>
+                                    <Icon name='checkmark' /> 생성
         </Button>
 
                             </Grid.Column>

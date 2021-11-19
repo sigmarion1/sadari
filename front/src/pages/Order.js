@@ -20,25 +20,17 @@ import {
     Message
 } from 'semantic-ui-react'
 
-import SadariMenu from '../components/sadariMenu'
-import SadariComponent from '../components/sadari'
+import OrderComponent from '../components/order'
+import MemberManager from '../components/memberManager'
 
 const Order = () => {
 
     return (
         <>
-            <SadariMenu>
-                <Message negative>
-                    <Message.Header>
-                    임시 페이지 입니다.
-                    </Message.Header>
-                    <p>
-                        곧 업데이트 예정입니다.
-                    </p>
-                </Message>
+            <MemberManager>
+                <OrderComponent />
             
-
-            </SadariMenu>
+            </MemberManager>
         </>
     )
 }

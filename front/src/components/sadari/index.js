@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState, useContext } from 'react'
 
 import {
   Button,
@@ -34,20 +34,26 @@ import useSWR from 'swr'
 
 import faker from 'faker'
 import axios from 'axios'
+import useMemberList from '../../contexts/memberList'
+import MemberItem from '../memberManager/MemberItem'
+
+
 
 
 faker.locale = "ko"
 
-const SADARILENGTH = 40
+const SADARILENGTH = 60
 
-const MainSadari = (props) => {
+const MainSadari = () => {
 
-  const { data: membersData, mutate } = useSWR('/api/members', fetcher)
+  const { memberList } = useMemberList()
 
-  const members = membersData?.filter((member) => member.status === 1)
+  // const { data: membersData, mutate } = useSWR('/api/members', fetcher)
+
+  const members = memberList?.filter((member) => member.active === true)
   const verticalCount = SADARILENGTH
   const horizontalCount = members?.length
-  const connCount = horizontalCount * 5
+  const connCount = (horizontalCount-1) * 5
   const timeouts = []
 
   const [lState, setLState] = useState([])
@@ -100,11 +106,12 @@ const MainSadari = (props) => {
 
 
   })
+  // resetHandler()
 
 
   useEffect(() => {
     resetHandler()
-  }, [membersData])
+  }, [memberList])
 
   // useEffect(() => {
   //   setRState(lState[verticalCount - 1]?.map((node) => node.v - 2))
@@ -124,6 +131,7 @@ const MainSadari = (props) => {
     const startId = order || 0
     const endId = order + 1 || horizontalCount
     const newRState = rState.slice()
+
 
     for (let i = startId; i < endId; i++) {
       const current = { h: i, v: 0, color: getColorRowById(members[i].id) }
@@ -148,7 +156,7 @@ const MainSadari = (props) => {
 
         current.v = current.v + 1
         setLState(newLState)
-        timeouts.push(await timeout(30))
+        timeouts.push(await timeout(10))
 
       }
       newRState[current.h] = members[i]
@@ -164,21 +172,21 @@ const MainSadari = (props) => {
     }
   })
 
-  const onCreate = useCallback(
-    (name) => {
-        axios
-            .post('/api/members', { name })
-            .then(() => mutate())
-    }, [membersData]
-)
+//   const onCreate = useCallback(
+//     (name) => {
+//         axios
+//             .post('/api/members', { name })
+//             .then(() => mutate())
+//     }, [membersData]
+// )
 
-const onDelete = useCallback(
-  (id) => {
-      axios
-          .delete('/api/members/' + id)
-          .then(() => mutate())
-  }, [membersData]
-)
+// const onDelete = useCallback(
+//   (id) => {
+//       axios
+//           .delete('/api/members/' + id)
+//           .then(() => mutate())
+//   }, [membersData]
+// )
 
 
   return (
@@ -191,31 +199,10 @@ const onDelete = useCallback(
             <tr>
               {
                 members &&
-                members.map((member, index) => (
+                members.filter((member) => member.active === true).map((member, index) => (
 
                   <th key={index}>
-                    <Label as='a' color={getColorById(member.id)} image>
-                      <img src={'https://avatars.dicebear.com/api/avataaars/' + member.name + '.svg'} />
-                      {member.name}
-                    </Label>
-                  </th>
-                ))
-              }
-            </tr>
-            <tr>
-              {
-                members &&
-                members.map((member, index) => (
-
-                  <th key={index}>
-                    <Button.Group basic size="mini">
-                      <Button icon onClick={() => runHandler(index)}>
-                        <Icon name='play' />
-                      </Button>
-                      <Button icon onClick={() => onDelete(member.id)}>
-                        <Icon name='delete' />
-                      </Button>
-                    </Button.Group>
+                    <MemberItem member={member} onClick={() => runHandler(index)} />
                   </th>
                 ))
               }
@@ -245,6 +232,21 @@ const onDelete = useCallback(
           <thead>
             <tr>
               {
+                rState?.map((member, index) => (
+                  <th key={index}>
+                    {member &&
+
+                  <MemberItem member={member}/>
+
+                    }
+                  </th>
+                ))
+              }
+            </tr>
+          </thead>
+          <thead>
+            <tr>
+              {
                 members &&
                 members.map((_, index) => (
 
@@ -255,26 +257,13 @@ const onDelete = useCallback(
               }
             </tr>
           </thead>
-          <thead>
-            <tr>
-              {
-                rState?.map((member, index) => (
-                  <th key={index}>
-                    {member &&
-                      <Label color={getColorById(member.id)} image>
-                        <img src={'https://avatars.dicebear.com/api/avataaars/' + member.name + '.svg'} />
-                        {member.name}
-                      </Label>
-                    }
-                  </th>
-                ))
-              }
-            </tr>
-          </thead>
+
 
 
         </table>
       </Segment>
+
+      <Segment style={{width:'100%'}}>
       {
         !isPlaying && <Button positive onClick={() => runHandler()}>시작</Button>
       }
@@ -287,13 +276,10 @@ const onDelete = useCallback(
 
 <Button floated='right' secondary onClick={() => setCover(!cover)}>가림막 설정</Button>
 
-      {
-        !isPlaying && <Button floated='right' primary onClick={() => onCreate(faker.name.firstName())}>참가자 추가</Button>
-      }
 
 
 
-      {
+{
         isOne &&
         <Message warning>
         <Message.Header>참가자 숫자 오류</Message.Header>
@@ -304,17 +290,17 @@ const onDelete = useCallback(
 
 
       <Message info>
-        <Message.Header>참가자 이름을 변경 하거나 상태를 변경하려면?</Message.Header>
-        <p><mark><a href='/member'>참가자 관리</a></mark>에서 해 보세요!!</p>
-      </Message>
-      <Message info>
         <Message.Header>사다리 타기를 시작하려면</Message.Header>
-        <p>시작 버튼을 누르거나 참가자를 클릭하세요!</p>
+        <p>시작 버튼을 누르거나 참가자를 클릭하세요! 당첨 내용을 클릭하면 값을 바꿀 수 있습니다!</p>
+
       </Message>
-      <Message info>
-        <Message.Header>당첨 내용을 바꾸고 싶나요?</Message.Header>
-        <p>클릭하면 값을 변경할 수 있습니다! 자주 쓰는 당첨 내용 저장 기능도 업데이트 예정이에요!</p>
-      </Message>
+
+
+
+</Segment>
+
+
+
 
     </>
   )

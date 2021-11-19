@@ -19,21 +19,17 @@ import {
     Statistic
 } from 'semantic-ui-react'
 
-import SadariMenu from '../components/sadariMenu'
 import SadariComponent from '../components/sadari'
+import MemberManager from '../components/memberManager'
 
 const MainSadari = () => {
 
     return (
         <>
-            <SadariMenu>
-                
 
-             
+<MemberManager>
                 <SadariComponent />
-
-         
-            </SadariMenu>
+                </MemberManager>
         </>
     )
 }
