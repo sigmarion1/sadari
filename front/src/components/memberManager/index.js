@@ -32,11 +32,37 @@ import MemberItem from './MemberItem'
 import MemberInsert from './MemberInsert'
 import useMemberList from '../../contexts/memberList'
 
+import CSVReader from 'react-csv-reader'
+import styles from "./styles.css";
+
 
 const MemberManager = (props) => {
 
     const { memberList, setMemberList } = useMemberList()
 
+    const handleForce = (data, fileInfo) => {
+
+        const newMemberList = []
+        
+        data.map((row, id) => {
+            newMemberList.push({
+                id,
+                name: row[0],
+                active: true,
+                once: false,
+            })
+        })
+
+        setMemberList(newMemberList)
+
+    }
+
+    const papaparseOptions = {
+        header: false,
+        dynamicTyping: true,
+        skipEmptyLines: true,
+        // transformHeader: header => header.toLowerCase().replace(/\W/g, "_")
+      };
 
     // const [memberList, setMemberList] = useState([
     //     {
@@ -167,7 +193,19 @@ const MemberManager = (props) => {
 
                 <Divider />
 
-                <Button fluid primary disabled>CSV 업로드</Button>
+                <Header as='h3' textAlign='center'>
+            csv 업로드 [<a href='/csv_sample.csv' download>샘플파일</a>]
+        </Header>
+
+
+        <CSVReader
+    //   cssClass="react-csv-input"
+    //   label="Select CSV with secret Death Star statistics"
+      onFileLoaded={handleForce}
+      parserOptions={papaparseOptions}
+    //   style={{width: '100%'}}
+    //   cssInputClass={styles.csvInput}
+    />
 
                     </Segment>
             </Grid.Column>

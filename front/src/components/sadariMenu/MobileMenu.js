@@ -152,6 +152,14 @@ const onLogout = useCallback(() => {
             자리 배치
           </Menu.Item>
 
+          <Menu.Item
+            as={Link}
+            to='/info'
+          >
+            <Icon name='info circle' size="large" />
+            이건 뭔가요?
+          </Menu.Item>
+
         </Sidebar>
 
         <Sidebar.Pusher
@@ -201,14 +209,8 @@ const onLogout = useCallback(() => {
             to='/team'
           >
               팀나누기
-            </Menu.Item>
-
-            {/* <Menu.Item
-            as={Link}
-            to='/info'
-          >
-              이건뭔가요?
             </Menu.Item> */}
+
 
 
             <Menu.Menu position='right'>

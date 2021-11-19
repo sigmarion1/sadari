@@ -243,12 +243,12 @@ const onLogout = useCallback(() => {
               자리배치
             </Menu.Item>
 
-            {/* <Menu.Item
+            <Menu.Item
             as={Link}
             to='/info'
           >
               이건뭔가요?
-            </Menu.Item> */}
+            </Menu.Item>
 
 
             <Menu.Menu position='right'>

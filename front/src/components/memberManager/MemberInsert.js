@@ -52,7 +52,7 @@ const UserInsert = ({ onCreate }) => {
                 />
                 <Form.Button 
                     width={3} 
-                    content='추가'
+                    icon='plus'
                     // unstackable 
                     fluid
                     primary

@@ -86,11 +86,16 @@ const OrderComponent = () => {
     )
 
     const onChangeOptions = useCallback(() => {
-        const length = activeMemberList.length >= 8 ? 8 : activeMemberList.length
-        const newOptions = [...Array(length-1)].map((option, id) => {
-            return {key: id + 2, text: id + 2, value: id + 2}
-        })
-        setOptions(newOptions)
+
+        if(activeMemberList.length > 0) {
+            const length = activeMemberList.length >= 8 ? 8 : activeMemberList.length
+            const newOptions = [...Array(length-1)].map((option, id) => {
+                return {key: id + 2, text: id + 2, value: id + 2}
+            })
+            setOptions(newOptions)
+
+        }
+
     }, [memberList, currentValue])
 
     const onSetTeam = useCallback(async() => {
