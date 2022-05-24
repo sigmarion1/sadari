@@ -245,10 +245,19 @@ const onLogout = useCallback(() => {
 
             <Menu.Item
             as={Link}
+            to='/question'
+          >
+              그냥질문지
+            </Menu.Item>
+
+            <Menu.Item
+            as={Link}
             to='/info'
           >
               이건뭔가요?
             </Menu.Item>
+
+
 
 
             <Menu.Menu position='right'>

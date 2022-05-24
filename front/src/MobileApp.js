@@ -23,6 +23,7 @@ import Setting from './pages/Setting'
 import Team from './pages/Team'
 import Seat from './pages/Seat'
 import User from './pages/User'
+import Question from './pages/Question'
 import { MemberListProvider } from './contexts/memberList'
 
 
@@ -58,6 +59,9 @@ const App = () => {
       </Route>
       <Route exact path="/seat">
         <Seat />
+      </Route>
+      <Route exact path="/question">
+        <Question />
       </Route>
     </Switch>
 

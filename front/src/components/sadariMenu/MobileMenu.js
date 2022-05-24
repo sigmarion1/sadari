@@ -171,12 +171,23 @@ useEffect(() => {
 
           <Menu.Item
             as={Link}
+            to='/question'
+            onClick={toggleVisible}
+          >
+            <Icon name='question' size="large" />
+            그냥질문지
+          </Menu.Item>
+
+          <Menu.Item
+            as={Link}
             to='/info'
             onClick={toggleVisible}
           >
             <Icon name='info circle' size="large" />
             이건 뭔가요?
           </Menu.Item>
+
+
 
         </Sidebar>
 
