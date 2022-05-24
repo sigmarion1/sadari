@@ -1,4 +1,4 @@
-#개발발환환경경실실행행하하는는법법
+#개발환경실행하는법
 
 1. docker compose up db
 2. cd back / npm start

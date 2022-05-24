@@ -21,9 +21,11 @@ import {
 } from 'semantic-ui-react'
 
 import useInput from '../../utils/useInput'
+import faker from 'faker'
 
+faker.locale = "ko"
 
-const UserInsert = ({ onCreate }) => {
+const UserInsert = ({ onCreate, memberList }) => {
     const [name, onChangeName, setName] = useInput('')
 
     const onSubmit = useCallback(
@@ -33,9 +35,12 @@ const UserInsert = ({ onCreate }) => {
             if (name) {
                 onCreate(name)
                 setName('')
+            } else {
+                onCreate(faker.name.firstName())
+                setName('')
             }
         },
-        [name],
+        [name, memberList],
     )
 
     return (
@@ -45,7 +50,6 @@ const UserInsert = ({ onCreate }) => {
                     placeholder="이름을 입력해 주세요"
                     value={name}
                     onChange={onChangeName}
-                    required
                     // fluid
                     width={13}
                     // unstackable

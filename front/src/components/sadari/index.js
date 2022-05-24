@@ -53,7 +53,7 @@ const MainSadari = () => {
   const members = memberList?.filter((member) => member.active === true)
   const verticalCount = SADARILENGTH
   const horizontalCount = members?.length
-  const connCount = (horizontalCount-1) * 5
+  const connCount = (horizontalCount-1) * (getRandomInt(3,6))
   const timeouts = []
 
   const [lState, setLState] = useState([])
@@ -156,7 +156,7 @@ const MainSadari = () => {
 
         current.v = current.v + 1
         setLState(newLState)
-        timeouts.push(await timeout(10))
+        timeouts.push(await timeout(20))
 
       }
       newRState[current.h] = members[i]
@@ -274,7 +274,14 @@ const MainSadari = () => {
         !isPlaying && <Button negative onClick={() => resetHandler()}>리셋</Button>
       }
 
-<Button floated='right' secondary onClick={() => setCover(!cover)}>가림막 설정</Button>
+      {
+        !cover && <Button floated='right' secondary onClick={() => setCover(true)}>가림막 켜기</Button>
+      }
+
+{
+        cover && <Button floated='right' secondary onClick={() => setCover(false)}>가림막 끄기</Button>
+      }
+
 
 
 

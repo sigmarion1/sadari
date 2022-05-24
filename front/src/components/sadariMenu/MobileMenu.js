@@ -282,6 +282,7 @@ useEffect(() => {
                     //    console.log('hh')}}
                     header='PC에서 조금 더 잘보입니다'
                     content='인터넷 창을 켜고 sadari.app을 쳐보세요'
+                    onClick={() => setPcVisible(false)}
                     />
                     </Transition>
 

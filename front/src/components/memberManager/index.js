@@ -189,7 +189,7 @@ const MemberManager = (props) => {
 
                 </Segment>
 
-                <MemberInsert onCreate={onCreate} />
+                <MemberInsert onCreate={onCreate} memberList={memberList} />
 
                 <Divider />
 
