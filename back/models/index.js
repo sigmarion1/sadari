@@ -20,9 +20,10 @@ const sequelize = new Sequelize(
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
-db.User = require('./user')(sequelize, Sequelize)
-db.Member = require('./member')(sequelize, Sequelize)
+// db.User = require('./user')(sequelize, Sequelize)
+// db.Member = require('./member')(sequelize, Sequelize)
+db.Member = require('./sadari')(sequelize, Sequelize)
 
-db.User.hasMany(db.Member)
+// db.User.hasMany(db.Member)
 
 module.exports = db;

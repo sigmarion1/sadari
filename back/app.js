@@ -10,12 +10,12 @@ dotenv.config({ path: path.join(__dirname, "..", ".env" )})
 
 // const passport = require('passport')
 
-// const apiRouter = require('./routes/api')
-// const { sequelize } = require('./models');
+const apiRouter = require('./routes/api')
+const { sequelize } = require('./models');
 // const passportConfig = require('./passport')
 
 var app = express();
-// sequelize.sync();
+sequelize.sync();
 // passportConfig(passport)
 
 app.use(logger('dev'));
@@ -38,7 +38,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(express.static("build"))
 
-// app.use('/api', apiRouter)
+app.use('/api', apiRouter)
 
 app.get('*', function (request, response){
   response.sendFile(path.join(__dirname, 'build', 'index.html'))
