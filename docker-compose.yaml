@@ -1,27 +1,9 @@
 version: "3"
 services:
-  db:
-    image: mysql:8.0
-    restart: always
-    # Authentication plugin 'caching_sha2_password' cannot be loaded 에러 방지용 설정
-    command: --default-authentication-plugin=mysql_native_password
-    environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-        # 컨테이너 생성 시 아래 스키마를 생성합니다
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-    env_file:
-      - .env
-    ports:
-      - "${MYSQL_PORT}:3306" 
-
   back:
     build: ./back
     restart: always
-    depends_on:
-      - db
-    ports:
-      - "80:4000"
-    env_file:
-      - .env
-    environment: 
-      MYSQL_HOST: 172.17.0.1
+networks:
+  default:
+    external:
+      name: external-network
