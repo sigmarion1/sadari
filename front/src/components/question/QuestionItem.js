@@ -1,49 +1,44 @@
-import React, { useCallback } from 'react'
-import {
-    Button,
-    Container,
-    Divider,
-    Grid,
-    Header,
-    Icon,
-    Image,
-    List,
-    Segment,
-    Sidebar,
-    Visibility,
-    Dropdown,
-    Card,
-    CardDescription,
-    Label,
-    Input,
-    Statistic
-} from 'semantic-ui-react'
-import ColorTable, { getColorById } from '../../utils/ColorTable'
+import React from "react";
+import { Label } from "semantic-ui-react";
+import { getColorById } from "../../utils/ColorTable";
 
+const QuestionItem = ({ question, member }) => {
+  const { id, name, active } = member || {};
 
-const QuestionItem = ({question}) => {
-    const { id, text } = question
-
-    const color = (id, active) => {
-        if (active === false || id ==0 ) {
-            return ColorTable[1]
-        } else {
-            return getColorById(id)
-        }
+  const color = () => {
+    if (!member) {
+      return "grey";
+    } else {
+      return getColorById(id);
     }
+  };
 
+  return (
+    <Label
+      size={"massive"}
+      image
+      color={color()}
+      style={{
+        display: "table-cell",
+        verticalAlign: "middle",
+        height: "300px",
+      }}
+    >
+      {member && (
+        <>
+          <img
+            src={"https://avatars.dicebear.com/api/avataaars/" + name + ".svg"}
+          />
+          {name}
+          <br />
+          <br />
+          <br />
+        </>
+      )}
 
-    return (
-
-        <Label size={'massive'} image color={color(id, true)} key={id} 
-        style={{display: 'table-cell', verticalAlign: 'middle', height: '150px'}}
-        >
-        {text}
-        
+      {question}
     </Label>
+  );
+};
 
-
-    )
-}
-
-export default QuestionItem
+export default QuestionItem;

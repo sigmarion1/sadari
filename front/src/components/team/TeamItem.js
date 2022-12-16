@@ -1,53 +1,22 @@
-import React, { useCallback } from 'react'
-import {
-    Button,
-    Container,
-    Divider,
-    Grid,
-    Header,
-    Icon,
-    Image,
-    List,
-    Segment,
-    Sidebar,
-    Visibility,
-    Dropdown,
-    Card,
-    CardDescription,
-    Label,
-    Input,
-    Statistic
-} from 'semantic-ui-react'
-import ColorTable, { getColorById } from '../../utils/ColorTable'
-import MemberItem from '../memberManager/MemberItem'
-
+import React from "react";
+import { Header, Segment } from "semantic-ui-react";
+import MemberItem from "../memberManager/MemberItem";
 
 const TeamItem = ({ team, id }) => {
+  return (
+    <>
+      <Header as="h3" textAlign="left">
+        {id + 1} 팀 : {team.length} 명
+      </Header>
 
+      <Segment stacked>
+        {team &&
+          team.map((member, index) => (
+            <MemberItem key={index} member={member} />
+          ))}
+      </Segment>
+    </>
+  );
+};
 
-
-
-    return (
-        <>
-                        <Header as='h3' textAlign='left'>
-                    {id + 1} 팀 : {team.length} 명
-            </Header>
-
-                <Segment stacked>
-                {
-        team &&
-        team.map((member) => (
-            <MemberItem 
-            member={member}
-        />
-        )
-        )
-    }
-
-                </Segment>
-        </>
-
-    )
-}
-
-export default TeamItem
+export default TeamItem;
